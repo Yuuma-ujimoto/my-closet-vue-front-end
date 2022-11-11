@@ -4,12 +4,17 @@ const routes: Array<RouteRecordRaw> = [
     {
         path:"/",
         name:"index",
-        component:import("../views/IndexView.vue")
+        component:import("@/views/IndexView.vue")
     },
     {
         path:"/item/list",
         name:"item list",
-        component:import("../views/item/ListView.vue")
+        component:import("@/views/item/ListView.vue")
+    },
+    {
+        path:"/item/info/:id",
+        name:"item info",
+        component:import("@/views/item/InfoView.vue")
     }
 ]
 

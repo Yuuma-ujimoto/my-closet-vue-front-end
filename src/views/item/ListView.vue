@@ -1,6 +1,12 @@
 <template>
   <div class="item-list-wrapper">
-
+    <section v-for="item in ItemListViewData.ItemList" :key="item.item_id">
+      {{ item.item_name }}
+      {{ item.item_image_url }}
+      {{item.item_id}}
+      {{item.bland_name}}
+      {{item.main_category_name}}/{{item.sub_category_name}}
+    </section>
   </div>
 </template>
 
@@ -9,52 +15,44 @@ import {defineComponent} from "vue";
 import {auth} from "@/firebase/firebase";
 import {BaseAxiosURL} from "@/assets/BaseAxiosURL"
 import axios from "axios"
+import {ItemListViewData} from "@/Type"
+
 export default defineComponent({
-  name: "ListView",
+  name: "ItemListView",
   data() {
-    return {
-      ItemList: []
+    return{
+      ItemListViewData:{
+        ItemList:[]
+      } as ItemListViewData
     }
   },
-  mounted() {
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        this.$router.push("/");
-        return;
-      }
-      this.getFirebaseToken().then(async (token)=>{
-        if (!token){return;}
-
-        console.log(token)
-
-        const axiosURL = BaseAxiosURL + "/item/list"
-        const requestOption = {
-          headers:{
-            Authorization:`Bearer ${token}`
-          }
-        }
-
-        const axiosResult = await axios.get(axiosURL,requestOption)
-        console.log(axiosResult)
-
-        const responseBody = axiosResult.data
-        if (responseBody.ServerError||responseBody.ClientError){
-          return
-        }
-        this.ItemList = responseBody.ItemList
-
-      })
-
-    })
-  },
-  methods: {
-    getFirebaseToken: async function ():Promise<string|null> {
-      if (!auth.currentUser) {
-        return null
-      }
+  beforeMount() {
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) {this.$router.push("/");return;}
+      if(!auth.currentUser){this.$router.push("/");return}
       await auth.currentUser.reload()
-      return auth.currentUser.getIdToken(true)
-    }
+      const token = await auth.currentUser.getIdToken(true)
+
+      const axiosURL = BaseAxiosURL + "/items"
+      const requestOption = {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+
+      const axiosResult = await axios.get(axiosURL, requestOption)
+      const responseBody = axiosResult.data
+      if (responseBody.ServerError || responseBody.ClientError) {
+        return
+      }
+      this.ItemListViewData.ItemList = responseBody.ItemList
+    })
+
+  }
+
+  ,
+  methods: {
+
   }
 })
 </script>
