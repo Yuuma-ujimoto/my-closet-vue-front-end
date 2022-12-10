@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import {defineComponent} from "vue";
-import {auth} from "@/firebase/firebase";
+import {auth} from "@/plugins/firebase";
 import {BaseAxiosURL} from "@/assets/BaseAxiosURL";
 import axios from "axios";
 import {ItemInfoViewData} from "@/Type";

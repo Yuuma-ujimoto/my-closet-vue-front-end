@@ -1,23 +1,9 @@
 <template>
-  <div>
-    <button @click="googleSignIn">SignIn</button>
-  </div>
+  <p>a</p>
 </template>
 
-<script>
-import {auth} from "@/firebase/firebase";
-import {GoogleAuthProvider,signInWithRedirect} from "firebase/auth"
-export default {
-  name: "IndexView",
-  methods:{
-    googleSignIn:async function(){
-      const provider = new GoogleAuthProvider()
-      await signInWithRedirect(auth,provider)
+<script lang="ts">
 
-
-    }
-  }
-}
 </script>
 
 <style scoped>
